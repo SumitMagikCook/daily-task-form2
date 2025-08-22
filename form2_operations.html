@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Task List - Operations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .doer-info {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .date-time {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .date-time input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            background-color: #4a5568;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+        }
+        
+        th, td {
+            border: 2px solid #333;
+            padding: 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #4a5568;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .status-header {
+            background-color: #e53e3e !important;
+        }
+        
+        .remarks-header {
+            background-color: #e53e3e !important;
+        }
+        
+        .task-name {
+            background-color: #805ad5;
+            color: white;
+            font-weight: normal;
+            width: 40%;
+        }
+        
+        .frequency-col {
+            width: 15%;
+            text-align: center;
+            background-color: #f7fafc;
+            color: #4a5568;
+            font-weight: bold;
+        }
+        
+        .status-col {
+            width: 15%;
+            text-align: center;
+        }
+        
+        .remarks-col {
+            width: 30%;
+        }
+        
+        input[type="checkbox"] {
+            transform: scale(1.5);
+            cursor: pointer;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 40px;
+            resize: vertical;
+            border: 1px solid #ccc;
+            padding: 5px;
+            font-family: Arial, sans-serif;
+            border-radius: 4px;
+        }
+        
+        .non-routine-header {
+            background-color: #ffd700;
+            color: black;
+        }
+        
+        .observations-header {
+            background-color: #4a5568;
+        }
+        
+        .obs-action-header {
+            background-color: #e53e3e !important;
+        }
+        
+        .submit-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .submit-btn {
+            background-color: #4a5568;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2d3748;
+        }
+        
+        .export-btn {
+            background-color: #38a169;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .export-btn:hover {
+            background-color: #2f855a;
+        }
+        
+        .status-indicator {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .status-success {
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status-error {
+            background-color: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .task-checkbox-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="doer-info">
+            <strong>Doer: Dijit Kr Borthakur</strong><br>
+            <span>Quality Assurance Executive - Operational Tasks</span>
+        </div>
+        
+        <div class="form-header">
+            <h1>DAILY TASK LIST - OPERATIONS</h1>
+            <div class="date-time">
+                <div>
+                    <label for="form-date">Date:</label>
+                    <input type="date" id="form-date" name="form_date" required>
+                </div>
+                <div>
+                    <label for="form-time">Time:</label>
+                    <input type="time" id="form-time" name="form_time" required>
+                </div>
+            </div>
+        </div>
+        
+        <form id="dailyTaskForm">
+            <div class="section">
+                <div class="section-header">DAILY TASK LIST</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tasks</th>
+                            <th>Frequency</th>
+                            <th class="status-header">Status</th>
+                            <th class="remarks-header">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="task-name">Documentation</td>
+                            <td class="frequency-col">Daily</td>
+                            <td class="status-col">
+                                <label class="task-checkbox-label">
+                                    <input type="checkbox" id="task1" name="task1_status" data-task="Documentation">
+                                </label>
+                            </td>
+                            <td class="remarks-col">
+                                <textarea name="task1_remarks" placeholder="Enter remarks for Documentation..."></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="task-name">Bread Baking</td>
+                            <td class="frequency-col">Daily</td>
+                            <td class="status-col">
+                                <label class="task-checkbox-label">
+                                    <input type="checkbox" id="task2" name="task2_status" data-task="Bread Baking">
+                                </label>
+                            </td>
+                            <td class="remarks-col">
+                                <textarea name="task2_remarks" placeholder="Enter remarks for Bread Baking..."></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="task-name">Internal audit round</td>
+                            <td class="frequency-col">Daily</td>
+                            <td class="status-col">
+                                <label class="task-checkbox-label">
+                                    <input type="checkbox" id="task3" name="task3_status" data-task="Internal audit round">
+                                </label>
+                            </td>
+                            <td class="remarks-col">
+                                <textarea name="task3_remarks" placeholder="Enter remarks for Internal audit round..."></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-header non-routine-header">NON-ROUTINE TASKS</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task Description</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><textarea name="nonroutine1_task" placeholder="Enter task (e.g., Laminates and Pouches)..."></textarea></td>
+                            <td><textarea name="nonroutine1_details" placeholder="Enter task details..."></textarea></td>
+                            <td><textarea name="nonroutine1_status" placeholder="Enter task status..."></textarea></td>
+                            <td><textarea name="nonroutine1_remarks" placeholder="Enter remarks..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="nonroutine2_task" placeholder="Enter task (e.g., Bags)..."></textarea></td>
+                            <td><textarea name="nonroutine2_details" placeholder="Enter task details..."></textarea></td>
+                            <td><textarea name="nonroutine2_status" placeholder="Enter task status..."></textarea></td>
+                            <td><textarea name="nonroutine2_remarks" placeholder="Enter remarks..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="nonroutine3_task" placeholder="Enter task (e.g., Sensory Analysis)..."></textarea></td>
+                            <td><textarea name="nonroutine3_details" placeholder="Enter task details..."></textarea></td>
+                            <td><textarea name="nonroutine3_status" placeholder="Enter task status..."></textarea></td>
+                            <td><textarea name="nonroutine3_remarks" placeholder="Enter remarks..."></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-header observations-header">OBSERVATIONS</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="observations-header">Observations</th>
+                            <th class="observations-header">Floor</th>
+                            <th class="obs-action-header">Suggested actionable / action taken (if any)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><textarea name="observation1" placeholder="Enter observation details..."></textarea></td>
+                            <td><textarea name="floor1" placeholder="Enter floor/location details..."></textarea></td>
+                            <td><textarea name="action1" placeholder="Enter suggested actions or actions taken..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="observation2" placeholder="Enter observation details..."></textarea></td>
+                            <td><textarea name="floor2" placeholder="Enter floor/location details..."></textarea></td>
+                            <td><textarea name="action2" placeholder="Enter suggested actions or actions taken..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="observation3" placeholder="Enter observation details..."></textarea></td>
+                            <td><textarea name="floor3" placeholder="Enter floor/location details..."></textarea></td>
+                            <td><textarea name="action3" placeholder="Enter suggested actions or actions taken..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="observation4" placeholder="Enter observation details..."></textarea></td>
+                            <td><textarea name="floor4" placeholder="Enter floor/location details..."></textarea></td>
+                            <td><textarea name="action4" placeholder="Enter suggested actions or actions taken..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="observation5" placeholder="Enter observation details..."></textarea></td>
+                            <td><textarea name="floor5" placeholder="Enter floor/location details..."></textarea></td>
+                            <td><textarea name="action5" placeholder="Enter suggested actions or actions taken..."></textarea></td>
+                        </tr>
+                        <tr>
+                            <td><textarea name="observation6" placeholder="Enter observation details..."></textarea></td>
+                            <td><textarea name="floor6" placeholder="Enter floor/location details..."></textarea></td>
+                            <td><textarea name="action6" placeholder="Enter suggested actions or actions taken..."></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="submit-container">
+                <button type="submit" class="submit-btn">Submit to Google Sheets</button>
+                <button type="button" class="export-btn" onclick="exportToCSV()">Export to CSV</button>
+            </div>
+            
+            <div id="status-indicator" class="status-indicator"></div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const currentTime = now.toTimeString().slice(0, 5);
+            
+            document.getElementById('form-date').value = today;
+            document.getElementById('form-time').value = currentTime;
+        });
+
+        document.getElementById('dailyTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            showStatus('Submitting data...', 'loading');
+            
+            const formData = collectFormData();
+            
+            submitToGoogleSheets(formData);
+        });
+
+        function collectFormData() {
+            const formData = new FormData(document.getElementById('dailyTaskForm'));
+            const data = {
+                timestamp: new Date().toISOString(),
+                date: document.getElementById('form-date').value,
+                time: document.getElementById('form-time').value,
+                doer: 'Dijit Kr Borthakur (Quality Assurance Executive)',
+                formType: 'Operations'
+            };
+            
+            for (let i = 1; i <= 3; i++) {
+                const checkbox = document.querySelector(`input[name="task${i}_status"]`);
+                const taskName = checkbox.getAttribute('data-task');
+                data[`${taskName}_Status`] = checkbox.checked ? 'Completed' : 'Not Completed';
+                data[`${taskName}_Remarks`] = formData.get(`task${i}_remarks`) || '';
+            }
+            
+            for (let i = 1; i <= 3; i++) {
+                data[`NonRoutine_${i}_Task`] = formData.get(`nonroutine${i}_task`) || '';
+                data[`NonRoutine_${i}_Details`] = formData.get(`nonroutine${i}_details`) || '';
+                data[`NonRoutine_${i}_Status`] = formData.get(`nonroutine${i}_status`) || '';
+                data[`NonRoutine_${i}_Remarks`] = formData.get(`nonroutine${i}_remarks`) || '';
+            }
+            
+            for (let i = 1; i <= 6; i++) {
+                data[`Observation_${i}`] = formData.get(`observation${i}`) || '';
+                data[`Floor_${i}`] = formData.get(`floor${i}`) || '';
+                data[`Action_${i}`] = formData.get(`action${i}`) || '';
+            }
+            
+            return data;
+        }
+
+        function submitToGoogleSheets(data) {
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcf5pmgkXbpGXRBmC0SZHLx7CROqDLe65CVLQJPDmvR8RQQ28-oO-u0zLe4Pu8zoQa/exec';
+            
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                showStatus('Data submitted successfully to Google Sheets!', 'success');
+                console.log('Form Data Submitted:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showStatus('Error submitting data. Please try again.', 'error');
+            });
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status-indicator');
+            statusDiv.textContent = message;
+            statusDiv.className = 'status-indicator';
+            
+            if (type === 'success') {
+                statusDiv.classList.add('status-success');
+            } else if (type === 'error') {
+                statusDiv.classList.add('status-error');
+            }
+            
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function exportToCSV() {
+            const data = collectFormData();
+            
+            const headers = Object.keys(data);
+            const values = Object.values(data);
+            
+            let csvContent = headers.join(',') + '\n';
+            csvContent += values.map(value => `"${value}"`).join(',');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `operational_tasks_${data.date}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
